@@ -1,6 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (defaultTargetPlatform == TargetPlatform.linux ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.fuchsia) {
+    await windowManager.ensureInitialized();
+
+    await windowManager.waitUntilReadyToShow(
+      const WindowOptions(fullScreen: true),
+      () async {
+        await windowManager.show();
+        await windowManager.focus();
+      },
+    );
+  }
+
   runApp(const MyApp());
 }
 
